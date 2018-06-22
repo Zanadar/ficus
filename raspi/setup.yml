@@ -1,0 +1,23 @@
+---
+- hosts: all
+
+  ubuntu_common_required_packages:
+  - ufw
+  - fail2ban
+  - unattended-upgrades
+  - logwatch
+
+
+  tasks:
+    - name: Ensure git is installed
+      apt: name=git state=installed
+
+    - name: Create my user account
+      user: name=ryan shell=/usr/bin/zsh
+
+    - name: Add my public key to the server
+      authorized_key: user=ryan
+                      key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  - name: Install required packages
+    apt: state=installed pkg={{ item }}
+    with_items: ubuntu_common_required_package
